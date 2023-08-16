@@ -11,8 +11,13 @@ export default function Table() {
   function handleClick() {
     const username = prompt("Enter codechef username : ");
     if (username) {
-      setFriends((prev) => [...prev, username]);
-      getData(username);
+      const foundElement = info.find((item) => item.username === username);
+      if (foundElement) {
+        alert("User has already been added to the table!");
+      } else {
+        setFriends((prev) => [...prev, username]);
+        getData(username);
+      }
     }
   }
 
@@ -110,7 +115,7 @@ export default function Table() {
       </div>
       <center>
         <button
-          className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
+          className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded my-12"
           onClick={handleClick}
         >
           Click here to add new friends
