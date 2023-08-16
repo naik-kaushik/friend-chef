@@ -2,6 +2,7 @@
 
 import axios from "axios";
 import { useState, useEffect } from "react";
+import _, { map } from "underscore";
 export default function Table() {
   const [friends, setFriends] = useState([]);
   const [info, setInfo] = useState([]);
@@ -28,27 +29,14 @@ export default function Table() {
 
   // to handle sorting
   //const sortedPeopleDescending = people.slice().sort((a, b) => b.age - a.age);
-  function handleSort(param) {
-    switch (param) {
-      case "username":
-        console.log("By username");
-        var newInfo = info
-          .slice()
-          .sort((a, b) => b.username.toLowerCase() - a.username.toLowerCase());
-        setInfo(newInfo);
-        break;
-      case "rating":
-        console.log("By rating");
-        var newInfo = info.slice().sort((a, b) => b.rating - a.rating);
-        setInfo(newInfo);
-        break;
-      case "contest":
-        console.log("By contest");
-        var newInfo = info.slice().sort((a, b) => b.contests - a.contests);
-        setInfo(newInfo);
-        break;
-      default:
-        break;
+  function handleSort(property, order) {
+    //console.log(`sorting by ${property}`);
+    let newInfo = _.sortBy(info, property);
+    if (info[0].username === newInfo[0].username) {
+      newInfo.reverse();
+      setInfo(newInfo);
+    } else {
+      setInfo(newInfo);
     }
   }
 
@@ -90,9 +78,27 @@ export default function Table() {
               </th>
               <th scope="col" className="px-6 py-3">
                 username
+                <button
+                  onClick={() => {
+                    handleSort("username");
+                  }}
+                  type="button"
+                  class="text-white bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                >
+                  &nbsp;↑↓
+                </button>
               </th>
               <th scope="col" className="px-6 py-3">
                 rating
+                <button
+                  onClick={() => {
+                    handleSort("rating");
+                  }}
+                  type="button"
+                  class="text-white bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                >
+                  &nbsp;↑↓
+                </button>
               </th>
               <th scope="col" className="px-6 py-3">
                 contests
@@ -113,15 +119,3 @@ export default function Table() {
     </>
   );
 }
-
-/*
-<button
-                  onClick={() => {
-                    handleSort("username");
-                  }}
-                  type="button"
-                  class="text-white bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-                >
-                  &nbsp;↑
-                </button>
-*/
