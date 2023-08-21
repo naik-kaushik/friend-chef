@@ -3,9 +3,11 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import _, { map } from "underscore";
+import LineChart from "./lineChart";
 export default function Table() {
   const [friends, setFriends] = useState([]);
   const [info, setInfo] = useState([]);
+  const [ratingsArray, setRatingsArray] = useState([]);
 
   // function to handle new friend
   function handleClick() {
@@ -27,6 +29,15 @@ export default function Table() {
     // console.log(frnd);
     if (res.data.username) {
       setInfo((prev) => [...prev, res.data]);
+      let conj = {
+        username: res.data.username,
+        rating: res.data.rating,
+      };
+      if (res.data.rating.startsWith("0")) {
+        conj.rating = "0";
+      }
+      setRatingsArray((prev) => [...prev, conj]);
+      // console.log(ratingsArray);
     } else {
       alert("Invalid Username!");
     }
@@ -121,6 +132,7 @@ export default function Table() {
           Click here to add new friends
         </button>
       </center>
+      <LineChart data={ratingsArray}></LineChart>
     </>
   );
 }
