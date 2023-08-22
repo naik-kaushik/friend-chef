@@ -33,8 +33,9 @@ export default function Table() {
         username: res.data.username,
         rating: res.data.rating,
       };
-      if (res.data.rating.startsWith("0")) {
-        conj.rating = "0";
+      const qi = res.data.rating.indexOf("?");
+      if (qi != -1) {
+        conj.rating = res.data.rating.substring(0, qi);
       }
       setRatingsArray((prev) => [...prev, conj]);
       // console.log(ratingsArray);
@@ -59,6 +60,11 @@ export default function Table() {
   // generating rows
   const tableRows = info.map((row, idx) => {
     //console.log(row);
+    const qi = row.rating.indexOf("?");
+    if (qi != -1) {
+      row.rating = row.rating.substring(0, qi);
+    }
+
     return (
       <tr
         key={idx}
@@ -72,7 +78,9 @@ export default function Table() {
           {row.username}
         </th>
 
-        <td className="px-6 py-4">{row.rating[0] == "0" ? 0 : row.rating}</td>
+        <td className="px-6 py-4">{row.rating}</td>
+        <td className="px-6 py-4">{row.highestRating}</td>
+        <td className="px-6 py-4">{row.stars}</td>
         <td className="px-6 py-4">{row.contests}</td>
       </tr>
     );
@@ -90,7 +98,7 @@ export default function Table() {
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
-                Sr. No
+                #
               </th>
               <th scope="col" className="px-6 py-3">
                 username
@@ -115,6 +123,12 @@ export default function Table() {
                 >
                   &nbsp;↑↓
                 </button>
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Highest Rating
+              </th>
+              <th scope="col" className="px-6 py-3">
+                stars
               </th>
               <th scope="col" className="px-6 py-3">
                 contests
