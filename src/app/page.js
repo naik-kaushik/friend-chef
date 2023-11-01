@@ -1,5 +1,4 @@
 "use client";
-import DataTable from "./components/datatable";
 import LineChart from "./components/lineChart";
 import Table from "./components/table";
 

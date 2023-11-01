@@ -4,10 +4,12 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import _, { map } from "underscore";
 import LineChart from "./lineChart";
+import Loader from "./Loader";
 export default function Table() {
   const [friends, setFriends] = useState([]);
   const [info, setInfo] = useState([]);
   const [ratingsArray, setRatingsArray] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   // function to handle new friend
   function handleClick() {
@@ -25,7 +27,11 @@ export default function Table() {
 
   // function to retrieve data of friend
   async function getData(frnd) {
+    setLoading(true);
     let res = await axios(`https://codechef-api.onrender.com/api/${frnd}`);
+    if (res) {
+      setLoading(false);
+    }
     // console.log(frnd);
     if (res.data.username) {
       setInfo((prev) => [...prev, res.data]);
@@ -93,60 +99,66 @@ export default function Table() {
         </h1>
         <br></br>
       </center>
-      <div className=" mx-8 my-12 relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="px-6 py-3">
-                #
-              </th>
-              <th scope="col" className="px-6 py-3">
-                username
-                <button
-                  onClick={() => {
-                    handleSort("username");
-                  }}
-                  type="button"
-                  class="text-white bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-                >
-                  &nbsp;↑↓
-                </button>
-              </th>
-              <th scope="col" className="px-6 py-3">
-                rating
-                <button
-                  onClick={() => {
-                    handleSort("rating");
-                  }}
-                  type="button"
-                  class="text-white bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-                >
-                  &nbsp;↑↓
-                </button>
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Highest Rating
-              </th>
-              <th scope="col" className="px-6 py-3">
-                stars
-              </th>
-              <th scope="col" className="px-6 py-3">
-                contests
-              </th>
-            </tr>
-          </thead>
-          <tbody>{tableRows}</tbody>
-        </table>
-      </div>
-      <center>
-        <button
-          className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded my-12"
-          onClick={handleClick}
-        >
-          Click here to add new friends
-        </button>
-      </center>
-      <LineChart data={ratingsArray}></LineChart>
+      {loading ? (
+        <Loader></Loader>
+      ) : (
+        <>
+          <div className=" mx-8 my-12 relative overflow-x-auto shadow-md sm:rounded-lg">
+            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col" className="px-6 py-3">
+                    #
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    username
+                    <button
+                      onClick={() => {
+                        handleSort("username");
+                      }}
+                      type="button"
+                      class="text-white bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                    >
+                      &nbsp;↑↓
+                    </button>
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    rating
+                    <button
+                      onClick={() => {
+                        handleSort("rating");
+                      }}
+                      type="button"
+                      class="text-white bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                    >
+                      &nbsp;↑↓
+                    </button>
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Highest Rating
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    stars
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    contests
+                  </th>
+                </tr>
+              </thead>
+              <tbody>{tableRows}</tbody>
+            </table>
+          </div>
+          <center>
+            <button
+              className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded my-12"
+              onClick={handleClick}
+            >
+              Click here to add new friends
+            </button>
+          </center>
+          <LineChart data={ratingsArray}></LineChart>
+        </>
+      )}
     </>
   );
 }
